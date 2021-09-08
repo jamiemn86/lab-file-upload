@@ -9,3 +9,6 @@ npm-debug.log
 # .env
 
 package-lock.json
+
+#uploads directory
+uploads

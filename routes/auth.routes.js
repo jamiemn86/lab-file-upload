@@ -108,6 +108,7 @@ router.get('/login', isLoggedOut, (req, res) => res.render('auth/login'));
 
 // .post() login route ==> to process form data
 router.post('/login', isLoggedOut, (req, res, next) => {
+  console.log('SESSION =====> ', req.session);
   const { email, password } = req.body;
 
   if (email === '' || password === '') {
@@ -125,7 +126,7 @@ router.post('/login', isLoggedOut, (req, res, next) => {
         });
         return;
       } else if (bcryptjs.compareSync(password, user.passwordHash)) {
-        req.session.user = user;
+        req.session.currentUser = user;
         res.redirect('/user-profile');
       } else {
         res.render('auth/login', { errorMessage: 'Incorrect password.' });
@@ -138,13 +139,13 @@ router.post('/login', isLoggedOut, (req, res, next) => {
 ///////////////////////////// LOGOUT ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-router.post('/logout', isLoggedIn, (req, res) => {
+router.post('/logout', isLoggedOut, (req, res) => {
   req.session.destroy();
   res.redirect('/');
 });
 
 router.get('/user-profile', isLoggedIn, (req, res) => {
-  res.render('users/user-profile');
+  res.render('users/user-profile', { userInSession: req.session.currentUser });
 });
 
 module.exports = router;

@@ -16,18 +16,19 @@ const hbs = require('hbs');
 const app = express();
 
 // ℹ️ This function is getting exported from the config folder. It runs most middlewares
-require('./config')(app);
+require('./config/index')(app);
 
 const projectName = 'lab-express-irontumblr';
-const capitalized = string => string[0].toUpperCase() + string.slice(1).toLowerCase();
+const capitalized = (string) =>
+  string[0].toUpperCase() + string.slice(1).toLowerCase();
 
 app.locals.title = `${capitalized(projectName)}- Generated with Ironlauncher`;
 
 // bind user to view - locals
 app.use('/', (req, res, next) => {
-  res.locals.user = req.session.user
-  next()
-})
+  res.locals.user = req.session.user;
+  next();
+});
 
 // 👇 Start handling routes here
 const index = require('./routes/index');

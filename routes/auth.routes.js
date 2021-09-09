@@ -12,6 +12,9 @@ const saltRounds = 10;
 // Require the User model in order to interact with the database
 const User = require('../models/User.model');
 
+// Require the Picture model
+const Picture = require('../models/profilepicture');
+
 // require (import) middleware functions
 const { isLoggedIn, isLoggedOut } = require('../middleware/route-guard.js');
 
@@ -62,7 +65,21 @@ router.post(
         });
       })
       .then((userFromDB) => {
-        // console.log("Newly created user is: ", userFromDB);
+        console.log('Newly created user is: ', userFromDB);
+        const picture = new Picture({
+          name: req.body.name,
+          path: `/uploads/${req.file.filename}`,
+          originalName: req.file.originalname
+        });
+
+        picture
+          .save()
+          // .then(() => {
+          //   res.redirect('/');
+          // })
+          .catch((err) => {
+            next(error);
+          });
         res.redirect('/user-profile');
       })
       .catch((error) => {
